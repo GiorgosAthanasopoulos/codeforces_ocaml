@@ -1,0 +1,3 @@
+(library
+ (name codeforces_ocaml)
+ (libraries str))

@@ -1,0 +1,4 @@
+(executable
+ (public_name codeforces_ocaml)
+ (name main)
+ (libraries codeforces_ocaml))
