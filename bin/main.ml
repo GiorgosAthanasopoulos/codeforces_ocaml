@@ -180,4 +180,6 @@ let boy_or_girl () =
   then Printf.printf "CHAT WITH HER!\n"
   else Printf.printf "IGNORE HIM!\n"
 
+(* TODO: Stones on the Table *)
+
 let () = boy_or_girl ()
