@@ -288,31 +288,98 @@ let _translation () =
     done;
   if !res then Printf.printf "YES\n" else Printf.printf "NO\n"
 
-(* FIX: queue_at_the_school *)
-let queue_at_the_school () =
+let _queue_at_the_school () =
+  let replace_char_at_index str index new_char =
+    if index < 0 || index >= String.length str then
+      invalid_arg "replace_char_at_index: index out of bounds"
+    else
+      let before = String.sub str 0 index in
+      let after = String.sub str (index + 1) (String.length str - index - 1) in
+      before ^ String.make 1 new_char ^ after
+  in
+
+  let rec process queue index =
+    if index >= String.length queue - 1 then queue
+    else
+      let current = String.get queue index in
+      let next = String.get queue (index + 1) in
+      if current = 'B' && next = 'G' then
+        let queue = replace_char_at_index queue index 'G' in
+        let queue = replace_char_at_index queue (index + 1) 'B' in
+        process queue (index + 2)
+      else process queue (index + 1)
+  in
+
+  let nt_line = read_line () in
+  let nt_split = Str.split (Str.regexp " ") nt_line in
+  let _n = int_of_string (List.nth nt_split 0) in
+  let t = int_of_string (List.nth nt_split 1) in
+  let queue = ref (read_line ()) in
+  for _i = 1 to t do
+    queue := process !queue 0
+  done;
+  Printf.printf "%s\n" !queue
+
+let _vanya_and_fence () =
+  let nh_line = read_line () in
+  let nh_split = Str.split (Str.regexp " ") nh_line in
+  let n = int_of_string (List.nth nh_split 0) in
+  let h = int_of_string (List.nth nh_split 1) in
+  let heights = read_line () in
+  let heights_split = Str.split (Str.regexp " ") heights in
+  let heights_split_int = List.map int_of_string heights_split in
+  let res = ref 0 in
+  for i = 0 to n - 1 do
+    let current = List.nth heights_split_int i in
+    if current > h then res := !res + 2 else res := !res + 1
+  done;
+  Printf.printf "%d\n" !res
+
+let _beautiful_year () =
+  let year = read_int () in
+  let rec beautiful_year_helper year =
+    let year = year + 1 in
+    let year_str = string_of_int year in
+    let len_year_str = String.length year_str in
+    let seen = Hashtbl.create len_year_str in
+    let rec beautiful_year_helper_helper idx =
+      if idx >= len_year_str then true
+      else
+        let c = String.get year_str idx in
+        if Hashtbl.mem seen c then false
+        else (
+          Hashtbl.add seen c true;
+          beautiful_year_helper_helper (idx + 1))
+    in
+    if beautiful_year_helper_helper 0 then year else beautiful_year_helper year
+  in
+  let res = beautiful_year_helper year in
+  Printf.printf "%d\n" res
+
+let _in_search_of_an_easy_problem () =
+  let n = read_int () in
   let line = read_line () in
   let split = Str.split (Str.regexp " ") line in
-  let _n = int_of_string (List.nth split 0) in
-  let t = int_of_string (List.nth split 1) in
-  let line = read_line () in
-  let rec queue_at_the_school_helper line t =
-    if t = 0 then line
-    else
-      let len_line = String.length line in
-      let res = ref "" in
-      for i = 0 to len_line - 2 do
-        let c1 = String.get line i in
-        let c2 = String.get line (i + 1) in
-        if c1 = 'B' && c2 = 'G' then (
-          res := !res ^ "GB";
-          if i = len_line - 2 then res := !res ^ "G")
-        else res := !res ^ String.make 1 c1
-      done;
-      queue_at_the_school_helper !res (t - 1)
-  in
-  let res = queue_at_the_school_helper line t in
-  Printf.printf "%s\n" res
+  let split_int = List.map int_of_string split in
+  let res = ref false in
+  for i = 0 to n - 1 do
+    let current = List.nth split_int i in
+    if current = 1 then res := true
+  done;
+  if !res then Printf.printf "HARD\n" else Printf.printf "EASY\n"
 
-(* TODO: vanya_and_fence *)
+let george_and_accommodation () =
+  let n = read_int () in
+  let res = ref 0 in
+  for _i = 1 to n do
+    let line = read_line () in
+    let split = Str.split (Str.regexp " ") line in
+    let p = int_of_string (List.nth split 0) in
+    let q = int_of_string (List.nth split 1) in
+    if q - p >= 2 then res := !res + 1
+  done;
+  Printf.printf "%d\n" !res
 
-let () = queue_at_the_school ()
+(* TODO: Magnets *)
+
+let () = george_and_accommodation ()
